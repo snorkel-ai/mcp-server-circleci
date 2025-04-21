@@ -45,6 +45,7 @@ export const getWorkflowFailedLogs: ToolCallback<{
       numberOfRuns: 1,
       startDate,
       endDate,
+      status: 'failed',
     },
   });
 
