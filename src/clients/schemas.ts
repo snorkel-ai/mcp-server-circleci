@@ -14,6 +14,15 @@ const PipelineSchema = z.object({
 
 const WorkflowSchema = z.object({
   id: z.string(),
+  name: z.string(),
+});
+
+const WorkflowRunSchema = z.object({
+  id: z.string(),
+  branch: z.string(),
+  status: z.string(),
+  created_at: z.string(),
+  credits_used: z.number(),
 });
 
 const JobSchema = z.object({
@@ -44,6 +53,11 @@ const FlakyTestSchema = z.object({
   flaky_tests: z.array(
     z.object({
       job_number: z.number(),
+      workflow_id: z.string(),
+      test_name: z.string(),
+      job_name: z.string(),
+      times_flaked: z.number(),
+      pipeline_number: z.number(),
     }),
   ),
   total_flaky_tests: z.number(),
@@ -102,6 +116,9 @@ export type PaginatedPipelineResponse = z.infer<
 
 export const Workflow = WorkflowSchema;
 export type Workflow = z.infer<typeof WorkflowSchema>;
+
+export const WorkflowRun = WorkflowRunSchema;
+export type WorkflowRun = z.infer<typeof WorkflowRunSchema>;
 
 export const Job = JobSchema;
 export type Job = z.infer<typeof JobSchema>;

@@ -5,12 +5,15 @@ import { getFlakyTestLogsTool } from './tools/getFlakyTests/tool.js';
 import { getFlakyTestLogs } from './tools/getFlakyTests/handler.js';
 import { configHelper } from './tools/configHelper/handler.js';
 import { configHelperTool } from './tools/configHelper/tool.js';
+import { triggerJobTool } from './tools/triggerPipeline/tool.js';
+import { triggerJob } from './tools/triggerPipeline/handler.js';
 
 // Define the tools with their configurations
 export const CCI_TOOLS = [
   getBuildFailureLogsTool,
   getFlakyTestLogsTool,
   configHelperTool,
+  triggerJobTool,
 ];
 
 // Extract the tool names as a union type
@@ -29,4 +32,5 @@ export const CCI_HANDLERS = {
   get_build_failure_logs: getBuildFailureLogs,
   find_flaky_tests: getFlakyTestLogs,
   config_helper: configHelper,
+  trigger_job: triggerJob,
 } satisfies ToolHandlers;

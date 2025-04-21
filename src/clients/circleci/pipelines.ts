@@ -110,4 +110,47 @@ export class PipelinesAPI {
 
     return parsedResult.data;
   }
+
+  async triggerJob({
+    projectSlug,
+    jobName,
+    envVars,
+  }: {
+    projectSlug: string;
+    jobName: string;
+    envVars?: Record<string, string>;
+  }): Promise<Pipeline> {
+    let encodedEnvVars = "";
+    if (envVars) {
+      encodedEnvVars = Object.entries(envVars)
+      .map(([k, v]) => `${k}=${v}`)
+      .join(';;');
+    }
+    const params = {
+        "custom-job-name-api": jobName,
+        "run-custom-job-api": true,
+        "custom-env-vars-api": encodedEnvVars,
+    }
+    return this.triggerPipeline({projectSlug, parameters: params})
+  }
+    
+  async triggerPipeline({
+    projectSlug,
+    parameters,
+  }: {
+    projectSlug: string;
+    parameters: object;
+  }): Promise<Pipeline> {
+    const rawResult = await this.client.post<unknown>(
+      `/project/${projectSlug}/pipeline`,
+      {"parameters": parameters},
+    );
+
+    const parsedResult = Pipeline.safeParse(rawResult);
+    if (!parsedResult.success) {
+      throw new Error(`Failed to parse pipeline response: ${JSON.stringify(parsedResult.error)}`);
+    }
+
+    return parsedResult.data;
+  }
 }

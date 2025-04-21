@@ -11,7 +11,19 @@ const getFlakyTests = async ({ projectSlug }: { projectSlug: string }) => {
     throw new Error('Flaky tests not found');
   }
 
-  const jobNumbers = flakyTests.flaky_tests.map((test) => test.job_number);
+  // Sort flaky tests by times_flaked in descending order and take top 5
+  const topFlakyTests = flakyTests.flaky_tests
+    .sort((a, b) => b.times_flaked - a.times_flaked)
+    .slice(0, 5);
+
+  // Filter out any undefined job numbers and ensure we have valid numbers
+  const jobNumbers = topFlakyTests
+    .map((test) => test.job_number)
+    .filter((jobNumber): jobNumber is number => jobNumber !== undefined);
+
+  if (jobNumbers.length === 0) {
+    throw new Error('No valid job numbers found in flaky tests');
+  }
 
   const testsPromises = jobNumbers.map(async (jobNumber) => {
     const tests = await circleci.tests.getJobTests({

@@ -1,4 +1,4 @@
-import { Workflow } from '../schemas.js';
+import { Workflow, WorkflowRun } from '../schemas.js';
 import { HTTPClient } from './httpClient.js';
 import { defaultPaginationOptions } from './index.js';
 import { z } from 'zod';
